@@ -1,0 +1,6 @@
+numpy
+scipy>=1.11.0
+scikit-learn
+threadpoolctl
+pyrodigal
+pyhmmsearch

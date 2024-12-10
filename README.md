@@ -1,23 +1,14 @@
 # MetaDecoder
 
-An algorithm for clustering metagenomic sequences [Modified by [Josh L. Espinoza](https://github.com/jolespin)]
+An algorithm for clustering metagenomic sequences [Modified by [Josh L. Espinoza](https://github.com/jolespin) for [Pyrodigal]((https://github.com/althonos/pyrodigal)) and [PyHMMSearch]((https://github.com/jolespin/pyhmmsearch)) support]
 
 Cite [MetaDecoder](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-022-01237-8):
 
 Liu, CC., Dong, SS., Chen, JB. et al. MetaDecoder: a novel method for clustering metagenomic contigs. Microbiome 10, 46 (2022). [https://doi.org/10.1186/s40168-022-01237-8](https://doi.org/10.1186/s40168-022-01237-8)
 
-
-
-
-## Benchmarks
-
-All datasets mentioned in text and some NEWLY ADDED datasets are available in **[Google Drive](https://drive.google.com/drive/folders/1_mybcewf3VE-7dte6oA-vDmlRx2ugzyD?usp=sharing)**.
-
-Benchmarks for all datasets are available in **benchmarks** directory.
-
 ## Dependencies
 
-* [python (version >= 3.8)](https://www.python.org/)
+* [python (version >= 3.9)](https://www.python.org/)
 * [numpy](https://pypi.org/project/numpy/)
 * [scipy](https://pypi.org/project/scipy/)
 * [scikit-learn](https://pypi.org/project/scikit-learn/)
@@ -29,30 +20,12 @@ Benchmarks for all datasets are available in **benchmarks** directory.
 
 ### Download and install MetaDecoder (Do not clone this repository)
 
-```shell
-# You may need to install pip3 before. #
-curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
-python3 get-pip.py
-
-# You may need to install or upgrade setuptools and wheel using pip3 before. #
-pip3 install --upgrade setuptools wheel
-
-# Download and install MetaDecoder version 1.1.0 #
-pip3 install -U https://github.com/liu-congcong/MetaDecoder/releases/download/v1.1.0/metadecoder-1.1.0-py3-none-any.whl
+```bash
+# Download and install MetaDecoder version 1.1.1rc1 #
+pip install -U https://github.com/jolespin/metadecoder-nal/releases/download/1.1.1rc/metadecoder-1.1.1rc1.tar.gz
 ```
 
-Make sure you have a good internet connection, as MetaDecoder will install the required Python dependencies, you can also install the dependencies manually:
-
-* **numpy**
-* **scipy**
-* **scikit-learn**
-* **threadpoolctl**
-
-```shell
-pip3 install numpy scipy scikit-learn threadpoolctl
-```
-
-MetaDecoder uses **FragGeneScan** and **Hmmer** for predicting protein coding genes and mapping single-copy marker genes to contigs, respectively.
+The NewAtlantis Labs fork of MetaDecoder uses **Pyrodigal** and **PyHMMSearch** for predicting protein coding genes (if not proteins are provided) and mapping single-copy marker genes to contigs, respectively.
 
 MetaDecoder has included the compiled FragGeneScan (version 1.31) and Hmmer (version 3.2.1).
 
@@ -101,19 +74,9 @@ Input: **SAMPLE1.BAM**, **SAMPLE2.BAM**, **...**
 Output: **METADECODER.COVERAGE**
 
 ```shell
-metadecoder coverage -b SAMPLE1.BAM SAMPLE2.BAM ... -o METADECODER.COVERAGE
+metadecoder coverage -b SAMPLE1.BAM ... SAMPLE2.BAM  -o METADECODER.COVERAGE
 ```
 
-Since v1.0.17, MetaDecoder supports calculating coverage for each sample, which can reduce the storage space for multiple sequencing samples.
-
-Since v1.1.0, MetaDecoder can work with sorted BAM files and does not support SAM files.
-
-```shell
-for file in *.bam
-do
-metadecoder coverage -s ${file}.bam -o ${file}.METADECODER.COVERAGE
-done
-```
 
 #### Map single-copy marker genes to the assembly
 
@@ -122,7 +85,7 @@ Input: **ASSEMBLY.FASTA**
 Output: **METADECODER.SEED**
 
 ```shell
-metadecoder seed --threads 50 -f ASSEMBLY.FASTA -o METADECODER.SEED
+metadecoder seed --threads 4 -f ASSEMBLY.FASTA -o METADECODER.SEED
 ```
 
 #### Run MetaDecoder algorithm to cluster contigs
@@ -140,46 +103,6 @@ Since v1.0.17, MetaDecoder can load multiple coverage files for clustering.
 ```shell
 metadecoder cluster -f ASSEMBLY.FASTA -c *.METADECODER.COVERAGE -s METADECODER.SEED -o METADECODER
 ```
-
-### A simple example to use MetaDecoder is available in MetaDecoder/example/
-
-## Change logs
-
-* 1.0.3 (20211008): Initial version.
-
-* 1.0.4 (20211029): Optimize the calculation of distance of pairwise kmer frequency.
-
-* 1.0.5 (20211105): Optimize the counting process of kmers.
-
-* 1.0.6 (20211207): Added an option (--no_clusters) to output only sequence IDs and the corresponding cluster IDs instead of sequences.
-
-* 1.0.7 (20220206): Minor bugs fixed.
-
-* 1.0.8 (20220315): Minor bugs fixed.
-
-* 1.0.9 (20220508): Fix a bug that causes abnormal coverage when the "--mapq" parameter is set to 0.
-
-* 1.0.10 (20220514): Minor bugs fixed.
-
-* 1.0.11 (20220518): Minor bugs fixed.
-
-* 1.0.12 (20220708): Minor bugs fixed.
-
-* 1.0.13 (20220712): Minor bugs fixed.
-
-* 1.0.14 (20220914): Minor bugs fixed.
-
-* 1.0.15 (20221103): Minor bugs fixed.
-
-* 1.0.16 (20221117): Minor bugs fixed.
-
-* 1.0.17 (20230418): Multiple coverage files for clustering.
-
-* 1.0.18 (20230816): Support gz formatted assemblies.
-
-* 1.0.19 (20240125): Clusters will not participate in the calculation of the average of kmer distance if it contains more than 50,000 sequences.
-
-* 1.1.0 (20241207): MetaDecoder has been updated to support sorted BAM files only, discontinuing support for SAM files [Thanks for @jolespin].
 
 ## References
 
