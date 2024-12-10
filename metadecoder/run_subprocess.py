@@ -2,7 +2,7 @@ import gzip
 import os
 from multiprocessing import Pool
 from shutil import move, rmtree
-from subprocess import DEVNULL, PIPE, STDOUT, run
+from subprocess import DEVNULL, PIPE, STDOUT, run, Popen
 
 from .fasta_utility import split_fasta
 from .make_file import make_file
@@ -11,7 +11,24 @@ from .make_file import make_file
 def worker(command, message):
     assert not run(command, stdout = DEVNULL, stderr = DEVNULL).returncode, message
     return None
+def run_command(command):
+    print(command)
+    command =" ".join(map(str,command))
 
+    # Execute the process
+    process = Popen(
+        command,
+        shell=True,
+        stdout=PIPE,
+        stderr=PIPE,
+        executable="bash",
+        universal_newlines=True,  # or text=True
+        bufsize=1,  # Line-buffered mode
+    )
+    # Wait until process is complete and return stdout/stderr
+    stdout_, stderr_ = process.communicate()
+    returncode_ = process.returncode
+    return stdout_, stderr_, returncode_
 
 def get_program_information(program):
     process = run([program, ], stdout = PIPE, stderr = STDOUT)
@@ -82,6 +99,20 @@ def run_prodigal(prodigal, input_fasta, output_fasta, threads):
     return None
 
 
+def run_pyrodigal(pyrodigal, input_fasta, output_fasta, threads):
+    '''
+    Run prodigal to predict all protein sequences.
+    '''
+    assert pyrodigal is not None, "pyrodigal is not installed. Install pyrodigal and try again."
+
+    try:
+        stdout, stderr, returncode = run_command([pyrodigal, '-a', output_fasta, '-i', input_fasta, '-p', 'meta', "-j", threads])
+    except Exception as e:
+        raise Exception(f'An error has occured while running Pyrodigal: {e}')
+        
+    return stdout, stderr, returncode
+        
+
 def run_hmmsearch(hmmsearch, input_hmm, input_fasta, output_file, threads):
     '''
     Run Hmmsearch to map hmms to sequences.
@@ -112,6 +143,19 @@ def run_hmmsearch(hmmsearch, input_hmm, input_fasta, output_file, threads):
         os.remove(OUTPUT_FILE)
     open4w.close()
     return None
+
+def run_pyhmmsearch(pyhmmsearch, input_hmm, input_fasta, output_file, threads):
+    '''
+    Run Hmmsearch to map hmms to sequences.
+    '''
+    assert pyhmmsearch is not None, "pyrodigal is not installed. Install pyrodigal and try again."
+
+    try:
+        stdout, stderr, returncode = run_command([pyhmmsearch, '--n_jobs', threads, "-d", input_hmm, "-i", input_fasta, "-o", output_file, "-f", "name", "-m", "gathering"])
+    except Exception as e:
+        raise Exception(f'An error has occured while running Pyrodigal: {e}')
+        
+    return stdout, stderr, returncode
 
 
 def run_makeblastdb(makeblastdb, input_fasta, output_file):

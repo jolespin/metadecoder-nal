@@ -17,7 +17,7 @@ def __init__():
 
     subparser = parser.add_subparsers(title = 'program', dest = 'program', required = True, help = 'Run metadecoder coverage|seed|cluster --help for help.')
 
-    coverage_parser = subparser.add_parser('coverage', formatter_class = RawTextHelpFormatter, help = 'Calculate sequence coverages from BAM files.\nUsage: metadecoder coverage -s sample1.bam ... sampleN.bam -o output.coverage.')
+    coverage_parser = subparser.add_parser('coverage', formatter_class = RawTextHelpFormatter, help = 'Calculate sequence coverages from BAM files.\nUsage: metadecoder coverage -b sample1.bam ... sampleN.bam -o output.coverage.')
     coverage_parser.add_argument(
         '-b', '--bam', type = str, nargs = '+', required = True, metavar = 'str',
         help = 'The bam formatted files with headers "@SQ".'
@@ -39,8 +39,8 @@ def __init__():
         help = 'The minimum aligned ratio calculted from CIGAR.\nThe value should be from 0 to 1.\nDefault: 0.95.'
     )
     coverage_parser.add_argument(
-        '--threads', default = 10, type = int, required = False, metavar = 'int',
-        help = 'The number of threads.\nThe value should be a positive integer.\nDefault: 10.'
+        '--threads', default = 4, type = int, required = False, metavar = 'int',
+        help = 'The number of threads.\nThe value should be a positive integer.\nDefault: 4.'
     )
 
     seed_parser = subparser.add_parser('seed', formatter_class = RawTextHelpFormatter, help = 'Map the marker genes (HMMs) to sequences.\nUsage: metadecoder seed -f input.fasta -o output.seed.')
@@ -53,17 +53,29 @@ def __init__():
         help = 'The output seed file.'
     )
     seed_parser.add_argument(
-        '--threads', default = 20, type = int, required = False, metavar = 'int',
-        help = 'The number of threads.\nThe value should be a positive integer.\nDefault: 20.'
+        '--threads', default = 4, type = int, required = False, metavar = 'int',
+        help = 'The number of threads.\nThe value should be a positive integer.\nDefault: 4.'
     )
     seed_parser.add_argument(
-        '--coverage', default = 0.5, type = float, required = False, metavar = 'float',
-        help = 'The min coverage of domain.\nThe value should be from 0 to 1.\nDefault: 0.5.'
+        '-a', '--proteins', default = '', type = str, required = False, metavar = 'str',
+        help = 'The fasta precomputed gene prediction profeins file.'
     )
     seed_parser.add_argument(
-        '--accuracy', default = 0.6, type = float, required = False, metavar = 'float',
-        help = 'The min accuracy.\nThe value should be from 0 to 1.\nDefault: 0.6.',
+        '--proteins_to_contigs', default = '', type = str, required = False, metavar = 'str',
+        help = 'Tab-delimited file mapping proteins to contigs [id_protein]<tab>[id_contig].  If --proteins and provided without --proteins_to_contigs then id_protein formatting is assumed to be [id_contig]_[gene_number]'
     )
+    seed_parser.add_argument(
+        '--remove_intermediate_files',action="store_true",
+        help = 'Remove protein fasta file (if created) and PyHMMSearch output'
+    )
+    # seed_parser.add_argument(
+    #     '--coverage', default = 0.5, type = float, required = False, metavar = 'float',
+    #     help = 'The min coverage of domain.\nThe value should be from 0 to 1.\nDefault: 0.5.'
+    # )
+    # seed_parser.add_argument(
+    #     '--accuracy', default = 0.6, type = float, required = False, metavar = 'float',
+    #     help = 'The min accuracy.\nThe value should be from 0 to 1.\nDefault: 0.6.',
+    # )
 
     cluster_parser = subparser.add_parser('cluster', formatter_class = RawTextHelpFormatter, help = 'Running the MetaDecoder to cluster sequences.\nUsage: metadecoder cluster -f input.fasta -c input.coverage -s input.seed -o output.metadecoder')
     cluster_parser.add_argument(
