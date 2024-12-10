@@ -1,14 +1,13 @@
 # MetaDecoder
 
-An algorithm for clustering metagenomic sequences.
+An algorithm for clustering metagenomic sequences [Modified by [Josh L. Espinoza](https://github.com/jolespin)]
 
 Cite [MetaDecoder](https://microbiomejournal.biomedcentral.com/articles/10.1186/s40168-022-01237-8):
 
 Liu, CC., Dong, SS., Chen, JB. et al. MetaDecoder: a novel method for clustering metagenomic contigs. Microbiome 10, 46 (2022). [https://doi.org/10.1186/s40168-022-01237-8](https://doi.org/10.1186/s40168-022-01237-8)
 
-Please note that MetaDecoder will not be updated to optimize performance, only bug fixes. An updated version of MetaDecoder is already in development, which will bring more accurate clustering results and lower GPU resource requirements.
 
-2023年，青基评委给我不予资助的最终意见，理由是所谓的没有创新性。我不确定MetaDecoder2能否最终上线，因为仍有许多与科研无关的事情在消磨我的精力。请对青年科研工作者一些宽容，加油吧，最后感谢基金委。 - 20230827
+
 
 ## Benchmarks
 
@@ -23,8 +22,8 @@ Benchmarks for all datasets are available in **benchmarks** directory.
 * [scipy](https://pypi.org/project/scipy/)
 * [scikit-learn](https://pypi.org/project/scikit-learn/)
 * [threadpoolctl](https://pypi.org/project/threadpoolctl/)
-* [fraggenescan (version 1.31)](https://sourceforge.net/projects/fraggenescan/)
-* [hmmer (version 3.2.1)](http://www.hmmer.org/)
+* [pyrodigal](https://github.com/althonos/pyrodigal)
+* [pyhmmsearch](https://github.com/jolespin/pyhmmsearch)
 
 ## Installation
 
