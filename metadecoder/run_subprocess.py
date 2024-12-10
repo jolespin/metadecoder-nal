@@ -99,14 +99,22 @@ def run_prodigal(prodigal, input_fasta, output_fasta, threads):
     return None
 
 
-def run_pyrodigal(pyrodigal, input_fasta, output_fasta, threads):
+def run_pyrodigal(pyrodigal, input_fasta, output_fasta, parameters):
     '''
     Run prodigal to predict all protein sequences.
     '''
     assert pyrodigal is not None, "pyrodigal is not installed. Install pyrodigal and try again."
 
     try:
-        stdout, stderr, returncode = run_command([pyrodigal, '-a', output_fasta, '-i', input_fasta, '-p', 'meta', "-j", threads])
+        stdout, stderr, returncode = run_command([
+            pyrodigal, 
+            '-a', 
+            output_fasta, 
+            '-i', 
+            input_fasta, 
+            '-p', 'meta', "-j", 
+            parameters.threads,
+            ])
     except Exception as e:
         raise Exception(f'An error has occured while running Pyrodigal: {e}')
         
@@ -144,14 +152,32 @@ def run_hmmsearch(hmmsearch, input_hmm, input_fasta, output_file, threads):
     open4w.close()
     return None
 
-def run_pyhmmsearch(pyhmmsearch, input_hmm, input_fasta, output_file, threads):
+def run_pyhmmsearch(pyhmmsearch, input_fasta, output_file, parameters):
     '''
     Run Hmmsearch to map hmms to sequences.
     '''
     assert pyhmmsearch is not None, "pyrodigal is not installed. Install pyrodigal and try again."
 
     try:
-        stdout, stderr, returncode = run_command([pyhmmsearch, '--n_jobs', threads, "-d", input_hmm, "-i", input_fasta, "-o", output_file, "-f", "name", "-m", "gathering"])
+        stdout, stderr, returncode = run_command([
+            pyhmmsearch, 
+            '--n_jobs', 
+            parameters.threads, 
+            "-d", 
+            parameters.hmm_database, 
+            "-i", 
+            input_fasta, 
+            "-o", 
+            output_file, 
+            "--hmm_marker_field", 
+            parameters.hmm_marker_field, 
+            "--threshold_method", 
+            parameters.threshold_method,
+            "--evalue", 
+            parameters.evalue,
+            "--score_type", 
+            parameters.score_type,
+            ])
     except Exception as e:
         raise Exception(f'An error has occured while running Pyrodigal: {e}')
         

@@ -88,7 +88,9 @@ def main(parameters):
         print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Identifying protein sequences.', flush = True)
         run_pyrodigal(
             shutil.which("pyrodigal"),
-            parameters.fasta, protein_output, parameters.threads
+            parameters.fasta, 
+            protein_output, 
+            parameters,
         )
         protein_to_contig  = parse_sequence_id(protein_output)
         remove_protein_file = True
@@ -97,8 +99,9 @@ def main(parameters):
     pyhmmsearch_output =  parameters.output + ".pyhmmsearch.tsv"
     run_pyhmmsearch(
             shutil.which("pyhmmsearch"),
-            os.path.join(os.path.dirname(metadecoder.__file__), 'markers.hmm.gz'),
-            protein_output, pyhmmsearch_output, parameters.threads
+            protein_output, 
+            pyhmmsearch_output, 
+            parameters
     )
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Done.', flush = True)
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', f'Writing to file: {parameters.output}', flush = True)

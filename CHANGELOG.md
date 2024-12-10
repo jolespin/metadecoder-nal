@@ -38,3 +38,5 @@
 * 1.1.0 (20241207): MetaDecoder has been updated to support sorted BAM files only, discontinuing support for SAM files [Thanks for @jolespin].
 
 * 1.1.1rc1 (20241209): Added support for PyHMMSearch and Pyrodigal.  Also provides support for precomputed gene predictions.
+
+* 1.1.1rc2 (20241210): Added support for custom HMMs and additional parameters for PyHMMSearch

@@ -7,6 +7,7 @@ from . import metadecoder_coverage
 from . import metadecoder_seed
 from . import metadecoder_cluster
 
+HMM_MARKERS = os.path.join(os.path.dirname(__file__), "markers.hmm.gz")
 
 def __init__():
     parser = ArgumentParser(
@@ -65,9 +66,32 @@ def __init__():
         help = 'Tab-delimited file mapping proteins to contigs [id_protein]<tab>[id_contig].  If --proteins and provided without --proteins_to_contigs then id_protein formatting is assumed to be [id_contig]_[gene_number]'
     )
     seed_parser.add_argument(
+        '-d', '--hmm_database', default = HMM_MARKERS, type = str, required = False, metavar = 'str',
+        help = f'Path to HMM markers file.  Can be gzipped. [Default: {HMM_MARKERS}]' 
+    )
+    
+    seed_parser.add_argument(
+        '--hmm_marker_field',  default="name", type=str, choices={"accession", "name"}, metavar = 'str', help="HMM reference type (accession, name) [Default: name]",
+    )
+    
+    seed_parser.add_argument(
+        '--score_type',  default="full", type=str, choices={"full", "domain"}, metavar = 'str', help="Score reflects full sequence or domain only [Default: full]",
+    )
+    
+    seed_parser.add_argument(
+        '--threshold_method',  default="gathering", type=str, choices={"gathering", "noise", "trusted", "e"}, metavar = 'str',  help="Cutoff threshold method [Default:  gathering]",
+    )
+    seed_parser.add_argument(
+        '--evalue',  default=10.0, type=float,  help="E-value threshold [Default: 10.0]",
+    )
+
+    seed_parser.add_argument(
         '--remove_intermediate_files',action="store_true",
         help = 'Remove protein fasta file (if created) and PyHMMSearch output'
     )
+    
+
+
     # seed_parser.add_argument(
     #     '--coverage', default = 0.5, type = float, required = False, metavar = 'float',
     #     help = 'The min coverage of domain.\nThe value should be from 0 to 1.\nDefault: 0.5.'
