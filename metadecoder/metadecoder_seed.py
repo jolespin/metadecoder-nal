@@ -48,7 +48,7 @@ def parse_sequence_id(protein_fasta):
 
 
 def get_seeds(file, output, protein_to_contig):
-    model2sequences = defaultdict(list)
+    model2sequences = defaultdict(set)
     open_file = open(file, 'r', encoding = 'utf-8')
     next(open_file)
     for line in open_file:
@@ -57,12 +57,12 @@ def get_seeds(file, output, protein_to_contig):
             if not line.startswith('#'):
                 id_protein, id_hmm, *tmp = line.split()
                 id_contig = protein_to_contig[id_protein]
-                model2sequences[id_hmm].append(id_contig)
+                model2sequences[id_hmm].add(id_contig)
                 
     open_file.close()
     open_file = open(output, 'w')
     for model, contigs in model2sequences.items():
-        print(model, *contigs, sep = '\t', file = open_file)
+        print(model, *sorted(contigs), sep = '\t', file = open_file)
     open_file.close()
 
 

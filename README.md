@@ -21,8 +21,8 @@ Liu, CC., Dong, SS., Chen, JB. et al. MetaDecoder: a novel method for clustering
 ### Download and install MetaDecoder (Do not clone this repository)
 
 ```bash
-# Download and install MetaDecoder version 1.1.1rc1 #
-pip install -U https://github.com/jolespin/metadecoder-nal/releases/download/1.1.1rc/metadecoder-1.1.1rc1.tar.gz
+# Download and install MetaDecoder version 1.1.1rc2 #
+pip install -U https://github.com/jolespin/metadecoder-nal/releases/download/1.1.1rc2/metadecoder-1.1.1rc2.tar.gz
 ```
 
 The NewAtlantis Labs fork of MetaDecoder uses **Pyrodigal** and **PyHMMSearch** for predicting protein coding genes (if not proteins are provided) and mapping single-copy marker genes to contigs, respectively.
