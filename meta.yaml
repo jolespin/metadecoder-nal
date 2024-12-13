@@ -1,0 +1,58 @@
+{% set name = "metadecoder" %}
+{% set version = "1.1.1rc2" %}
+
+package:
+  name: {{ name|lower }}
+  version: {{ version }}
+
+source:
+  url: https://github.com/jolespin/metadecoder-nal/releases/download/{{ version }}/metadecoder-{{ version }}.tar.gz
+  md5: 1125e5f7044e2de396cff55cc9a34daa
+
+build:
+  noarch: python
+  number: 0
+  script: "{{ PYTHON }} -m pip install . --no-deps -vv"
+  entry_points:
+    - metadecoder = metadecoder.cli:main  # Add this if you have a command-line interface
+
+requirements:
+  host:
+    - python >=3.8,<3.12
+    - pip
+    - setuptools
+    - wheel
+  
+  run:
+    - python >=3.8,<3.12
+    - numpy >=1.20
+    - scipy >=1.7
+    - scikit-learn >=0.24
+    - threadpoolctl >=3.0
+    - pyrodigal
+    - pyhmmsearch
+    # Optional GPU support
+    # - cupy-cuda11x  # Uncomment and adjust CUDA version as needed
+
+test:
+  imports:
+    - metadecoder
+  # Add any specific test commands if applicable
+  # commands:
+  #   - metadecoder --help
+
+about:
+  home: https://github.com/new-atlantis-labs/metadecoder-nal
+  license: MIT
+  license_family: MIT
+  license_file: LICENSE
+  summary: "MetaDecoder: An algorithm for clustering metagenomic sequences"
+  description: |
+    MetaDecoder is a novel method for clustering metagenomic contigs, 
+    integrated with Pyrodigal and PyHMMSearch for enhanced functionality. 
+    Supports GPU acceleration with CuPy.
+  dev_url: https://github.com/jolespin/metadecoder-nal
+
+extra:
+  recipe-maintainers:
+    - jolespin
