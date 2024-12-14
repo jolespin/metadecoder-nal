@@ -42,6 +42,8 @@
 
 * 1.1.1rc2 (20241210): Added support for custom HMMs and additional parameters for PyHMMSearch
 
+* 1.1.1rc3 (20241214): Added support for Python 3.8 for CheckM2 (In addition to Python 3.9+)
+
 
 ## Pending:
 * Add precomputed `PyHMMSearch` results

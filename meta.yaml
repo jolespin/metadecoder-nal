@@ -7,7 +7,7 @@ package:
 
 source:
   url: https://github.com/jolespin/metadecoder-nal/releases/download/{{ version }}/metadecoder-{{ version }}.tar.gz
-  md5: 1125e5f7044e2de396cff55cc9a34daa
+  md5: 6b184ef683976eb2e7fe80d54186d24c
 
 build:
   noarch: python
