@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "metadecoder"
-version = "1.1.1rc2"
+version = "1.1.1rc3"
 description = "An algorithm for clustering metagenomic sequences"
 requires-python = ">=3.8"
 license = {text = "GPLv3"}
@@ -12,7 +12,7 @@ authors = [{name = "Liucongcong", email = "congcong_liu@icloud.com"}]
 maintainers = [{name = "Josh L. Espinoza", email = "jolespin@newatlantis.io"}]
 dependencies = [
     "numpy",
-    "scipy>=1.11.0",
+    "scipy>=1.0",
     "scikit-learn",
     "threadpoolctl",
     "pyrodigal",
