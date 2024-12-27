@@ -179,7 +179,7 @@ def load_dpgmm_prediction(file):
     for line in open_file:
         predictions.append(line.rstrip('\n'))
     open_file.close()
-    return numpy.array(predictions, dtype = numpy.int64)
+    return numpy.array(predictions, dtype = int)
 
 
 def read_mapping_file(input_file):
@@ -228,7 +228,7 @@ def run_models(process_queue, container, offset, kmer, kmer2index, kmers, sampli
             if seeds:
                 # Run the kmer frequency probabilistic model. #
                 x4training = sample_kmer_frequency(seeds, kmer, kmer2index, kmers, sampling_length2, sampling_number2, 1, random_number)
-                y4training = numpy.repeat(numpy.arange(clusters, dtype = numpy.int64), sampling_number2)
+                y4training = numpy.repeat(numpy.arange(clusters, dtype = int), sampling_number2)
                 clustering_probability = run_svm(x4training, y4training, kmer_frequency, True, random_number)
                 
                 # Run the coverage probabilistic model. #
@@ -299,7 +299,7 @@ def main(parameters):
     length = numpy.array(length)
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Done.', flush = True)
 
-    sequences = numpy.arange(len(sequence_ids), dtype = numpy.int64)
+    sequences = numpy.arange(len(sequence_ids), dtype = int)
 
     # Read coverage file, return array. #
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Loading coverage file.', flush = True)
@@ -311,11 +311,12 @@ def main(parameters):
 
     # Calculate kmer frequency. #
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Counting kmers of all sequences.', flush = True)
-    if os.access(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers', os.R_OK):
-        kmer_frequency = load_kmer_frequency(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers')
+    kmer_filepath = os.path.join(os.path.split(parameters.output)[0],  str(parameters.min_sequence_length) + '.metadecoder.kmers')
+    if os.access(kmer_filepath, os.R_OK):
+        kmer_frequency = load_kmer_frequency(kmer_filepath)
     else:
         kmer_frequency = generate_kmer_frequency(SEQUENCES, parameters.kmer, kmer2index, kmers, os.cpu_count())
-        dump_kmer_frequency(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers', kmer_frequency)
+        dump_kmer_frequency(kmer_filepath, kmer_frequency)
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Done.', flush = True)
 
     # Read seed file, return hash. #
@@ -329,7 +330,8 @@ def main(parameters):
 
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Running the DPGMM algorithm to obtain clusters.', flush = True)
     pca = PCA(n_components = 0.9, whiten = False, random_state = parameters.random_number)
-    if not os.access(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm', os.R_OK):
+    dpgmm_filepath = os.path.join(os.path.split(parameters.output)[0],  str(parameters.min_sequence_length) + '.metadecoder.dpgmm')
+    if not os.access(dpgmm_filepath, os.R_OK):
         dpgmm_unit = numpy.mean(length)
         clusters = max(generate_seed(sequences, sequence2markers)[0], 10)
         if clusters <= 500:
@@ -345,9 +347,9 @@ def main(parameters):
         )
         dpgmm.main()
         dpgmm_predictions = numpy.argmax(dpgmm.r, axis = 1)
-        dump_dpgmm_prediction(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm', dpgmm_predictions)
+        dump_dpgmm_prediction(dpgmm_filepath, dpgmm_predictions)
     else:
-        dpgmm_predictions = load_dpgmm_prediction(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm')
+        dpgmm_predictions = load_dpgmm_prediction(dpgmm_filepath)
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Done.', flush = True)
 
     for dpgmm_prediction in numpy.unique(dpgmm_predictions):
@@ -390,7 +392,7 @@ def main(parameters):
 
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Running the kmer frequency and coverage models for clustering.', flush = True)
     while True:
-        container_array = numpy.asarray(container, dtype = numpy.int64)
+        container_array = numpy.asarray(container, dtype = int)
         print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', '{0:.2%} of the total sequences have been processed.'.format(numpy.sum(container_array < 0) / total_sequences), flush = True)
         if numpy.any(container_array >= 0):
             for container_value in numpy.unique(container_array[container_array >= 0]):
@@ -429,7 +431,7 @@ def main(parameters):
     output_clusters(
         sequence_ids,
         SEQUENCES,
-        numpy.asarray(container, dtype = numpy.int64),
+        numpy.asarray(container, dtype = int),
         parameters.output,
         parameters.no_clusters,
         parameters.output_unclustered_sequences

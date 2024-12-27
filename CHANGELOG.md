@@ -48,7 +48,5 @@
 
 * 1.1.1rc5 (20241227): Changed output to `.metadecoder.dpgmm` and `.metadecoder.kmers` to suffix the output file in `metadecoder cluster` instead of the input fasta
 
-
-
 ## Pending:
 * Add precomputed `PyHMMSearch` results
