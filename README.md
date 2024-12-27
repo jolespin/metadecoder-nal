@@ -8,7 +8,7 @@ Liu, CC., Dong, SS., Chen, JB. et al. MetaDecoder: a novel method for clustering
 
 ## Dependencies
 
-* [python (version >= 3.9)](https://www.python.org/)
+* [python](https://www.python.org/)
 * [numpy](https://pypi.org/project/numpy/)
 * [scipy](https://pypi.org/project/scipy/)
 * [scikit-learn](https://pypi.org/project/scikit-learn/)
@@ -21,7 +21,7 @@ Liu, CC., Dong, SS., Chen, JB. et al. MetaDecoder: a novel method for clustering
 ### Download and install MetaDecoder-NAL
 
 ```bash
-pip install -U https://github.com/jolespin/metadecoder-nal/releases/download/1.1.1rc3/metadecoder-1.1.1rc3.tar.gz
+pip install -U https://github.com/jolespin/metadecoder-nal/releases/download/1.1.1rc4/metadecoder-1.1.1rc4.tar.gz
 ```
 
 The NewAtlantis Labs fork of MetaDecoder uses **Pyrodigal** and **PyHMMSearch** for predicting protein coding genes (if not proteins are provided) and mapping single-copy marker genes to contigs, respectively.
