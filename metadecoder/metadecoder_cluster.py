@@ -311,11 +311,11 @@ def main(parameters):
 
     # Calculate kmer frequency. #
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Counting kmers of all sequences.', flush = True)
-    if os.access(os.path.basename(parameters.fasta) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers', os.R_OK):
-        kmer_frequency = load_kmer_frequency(os.path.basename(parameters.fasta) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers')
+    if os.access(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers', os.R_OK):
+        kmer_frequency = load_kmer_frequency(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers')
     else:
         kmer_frequency = generate_kmer_frequency(SEQUENCES, parameters.kmer, kmer2index, kmers, os.cpu_count())
-        dump_kmer_frequency(os.path.basename(parameters.fasta) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers', kmer_frequency)
+        dump_kmer_frequency(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.kmers', kmer_frequency)
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Done.', flush = True)
 
     # Read seed file, return hash. #
@@ -329,7 +329,7 @@ def main(parameters):
 
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Running the DPGMM algorithm to obtain clusters.', flush = True)
     pca = PCA(n_components = 0.9, whiten = False, random_state = parameters.random_number)
-    if not os.access(os.path.basename(parameters.fasta) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm', os.R_OK):
+    if not os.access(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm', os.R_OK):
         dpgmm_unit = numpy.mean(length)
         clusters = max(generate_seed(sequences, sequence2markers)[0], 10)
         if clusters <= 500:
@@ -345,9 +345,9 @@ def main(parameters):
         )
         dpgmm.main()
         dpgmm_predictions = numpy.argmax(dpgmm.r, axis = 1)
-        dump_dpgmm_prediction(os.path.basename(parameters.fasta) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm', dpgmm_predictions)
+        dump_dpgmm_prediction(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm', dpgmm_predictions)
     else:
-        dpgmm_predictions = load_dpgmm_prediction(os.path.basename(parameters.fasta) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm')
+        dpgmm_predictions = load_dpgmm_prediction(os.path.basename(parameters.output) + '.' + str(parameters.min_sequence_length) + '.metadecoder.dpgmm')
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Done.', flush = True)
 
     for dpgmm_prediction in numpy.unique(dpgmm_predictions):
