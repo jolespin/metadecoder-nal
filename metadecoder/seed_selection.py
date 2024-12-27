@@ -53,7 +53,7 @@ def select_seed(sequences, seeds_list, clusters, SEQUENCES, coverage, kmer_frequ
 
         # Weights of all seeds not in seeds_list are set to zeros. #
         seeds_list_length = len(seeds_list)
-        scores = numpy.zeros(shape = (unique_seeds.shape[0], unique_seeds.shape[0]), dtype = numpy.float64)
+        scores = numpy.zeros(shape = (unique_seeds.shape[0], unique_seeds.shape[0]), dtype = float)
 
         # create training data #
         x4training = numpy.concatenate(

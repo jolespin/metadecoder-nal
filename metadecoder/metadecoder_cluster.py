@@ -36,7 +36,7 @@ def read_coverage_file(files, sequence_id2sequence, sequences):
         open_file.close()
 
     bin_coverage = list()
-    coverage = numpy.empty(shape = (sequences, coverages), dtype = numpy.float64)
+    coverage = numpy.empty(shape = (sequences, coverages), dtype = float)
     for sequence in range(sequences):
         if sequence in sequence2bin2coverage:
             bin2coverage = sequence2bin2coverage[sequence]
@@ -45,7 +45,7 @@ def read_coverage_file(files, sequence_id2sequence, sequences):
             bin_coverage_ = [[1e-5 for coverage_ in range(coverages)]]
         if len(bin_coverage_) > 1:
             del bin_coverage_[-1]
-        bin_coverage.append(numpy.array(bin_coverage_, dtype = numpy.float64))
+        bin_coverage.append(numpy.array(bin_coverage_, dtype = float))
         coverage[sequence] = numpy.mean(bin_coverage[sequence], axis = 0)
     return (coverage, bin_coverage)
 
@@ -162,7 +162,7 @@ def load_kmer_frequency(file):
     for line in open_file:
         kmer_frequency.append(line.rstrip('\n').split('\t'))
     open_file.close()
-    return numpy.array(kmer_frequency, dtype = numpy.float64)
+    return numpy.array(kmer_frequency, dtype = float)
 
 
 def dump_dpgmm_prediction(file, predictions):
@@ -239,7 +239,7 @@ def run_models(process_queue, container, offset, kmer, kmer2index, kmers, sampli
                 gmm = GaussianMixture(n_components = clusters, covariance_type = 'full', n_init = 1, init_params = 'kmeans', random_state = random_number)
                 x = numpy.concatenate((kmer_frequency, coverage), axis = 1)
                 gmm.fit(x)
-                clustering_probability = numpy.log(gmm.predict_proba(x) + numpy.finfo(numpy.float64).eps)
+                clustering_probability = numpy.log(gmm.predict_proba(x) + numpy.finfo(float).eps)
 
             clustered_sequences_list, unclustered_sequences = cluster_sequences(sequences, clustering_probability, min_clustering_probability)
             if len(clustered_sequences_list) > 1:

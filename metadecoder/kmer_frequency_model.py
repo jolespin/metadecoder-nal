@@ -92,8 +92,8 @@ def generate_kmer_frequency(sequences, k, kmer2index, kmers, threads):
     process_queue.join()
     processes.clear()
 
-    kmers_ = numpy.array(container, dtype = numpy.float64).reshape(sequences_, kmers)
-    kmers_ += numpy.finfo(numpy.float64).eps
+    kmers_ = numpy.array(container, dtype = float).reshape(sequences_, kmers)
+    kmers_ += numpy.finfo(float).eps
     kmers_ /= numpy.sum(kmers_, axis = 1, keepdims = True)
     return kmers_
 
@@ -151,7 +151,7 @@ def run_svm(x4training, y4training, x4predicting, probability, random_number):
     # standardization #
     x4training_mean = numpy.mean(x4training, axis = 0)
     x4training_std = numpy.std(x4training, axis = 0)
-    x4training_std[x4training_std < numpy.finfo(numpy.float64).eps] = numpy.finfo(numpy.float64).eps
+    x4training_std[x4training_std < numpy.finfo(float).eps] = numpy.finfo(float).eps
     # fit model #
     svm.fit((x4training - x4training_mean) / x4training_std, y4training, sample_weight = None)
     # make predictions #

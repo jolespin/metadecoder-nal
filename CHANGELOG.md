@@ -44,6 +44,8 @@
 
 * 1.1.1rc3 (20241214): Added support for Python 3.8 for CheckM2 (In addition to Python 3.9+)
 
+* 1.1.1rc4 (20241226): Changed numpy.float64 to float for NumPy >= 1.24
+
 
 ## Pending:
 * Add precomputed `PyHMMSearch` results

@@ -18,10 +18,9 @@ Liu, CC., Dong, SS., Chen, JB. et al. MetaDecoder: a novel method for clustering
 
 ## Installation
 
-### Download and install MetaDecoder (Do not clone this repository)
+### Download and install MetaDecoder-NAL
 
 ```bash
-# Download and install MetaDecoder-NAL #
 pip install -U https://github.com/jolespin/metadecoder-nal/releases/download/1.1.1rc3/metadecoder-1.1.1rc3.tar.gz
 ```
 
