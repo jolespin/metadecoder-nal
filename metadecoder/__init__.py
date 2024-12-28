@@ -184,12 +184,16 @@ def __init__():
     )
 
     parser.add_argument(
-        '-v', '--version', action = 'version', version = '%(prog)s 1.1.1rc3'
+        '-v', '--version', action = 'version', version = '%(prog)s 1.1.1rc5'
     )
     return parser.parse_args()
 
 
 def parse_parameters(parameters):
+    
+    # Create output directory
+    output_directory = os.path.dirname(parameters.output)
+    os.makedirs(output_directory, exist_ok = True)
 
     if parameters.program == 'coverage':
         for index, file in enumerate(parameters.bam):
