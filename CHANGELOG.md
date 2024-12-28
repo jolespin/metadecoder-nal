@@ -46,7 +46,7 @@
 
 * 1.1.1rc4 (20241226): Changed numpy.float64 to float for NumPy >= 1.24
 
-* 1.1.1rc5 (20241227): Changed output to `.metadecoder.dpgmm` and `.metadecoder.kmers` to suffix the output file in `metadecoder cluster` instead of the input fasta.  Restored `numpy.float64` and `numpy.int64`.  Instead set limit `numpy<1.24`
+* 1.1.1rc5 (20241228): Changed output to `.metadecoder.dpgmm` and `.metadecoder.kmers` to suffix the output file in `metadecoder cluster` instead of the input fasta.  Restored `numpy.float64` and `numpy.int64`.  Instead set limit `numpy<1.24`. Also creates output directory for files if one doesn't exist.
 
 ## Pending:
 * Add precomputed `PyHMMSearch` results

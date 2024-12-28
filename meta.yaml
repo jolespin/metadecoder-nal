@@ -1,5 +1,5 @@
 {% set name = "metadecoder" %}
-{% set version = "1.1.1rc3" %}
+{% set version = "1.1.1rc5" %}
 
 package:
   name: {{ name|lower }}
@@ -7,7 +7,6 @@ package:
 
 source:
   url: https://github.com/jolespin/metadecoder-nal/releases/download/{{ version }}/metadecoder-{{ version }}.tar.gz
-  md5: 6b184ef683976eb2e7fe80d54186d24c
 
 build:
   noarch: python
