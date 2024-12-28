@@ -225,7 +225,7 @@ def parse_parameters(parameters):
         parameters.output = os.path.abspath(parameters.output)
         #all parameters are valid
         assert parameters.clustering_probability >= 0.0 and parameters.clustering_probability <= 1.0, 'The "clustering_probability" should be from 0 to 1.'
-        parameters.clustering_probability = numpy.log(parameters.clustering_probability + numpy.finfo(float).tiny)
+        parameters.clustering_probability = numpy.log(parameters.clustering_probability + numpy.finfo(numpy.float64).tiny)
         assert parameters.weight >= 0, 'The "weight" should be a non-negative float.'
         assert parameters.kmer > 0, 'The "kmer" should be a positive integer.'
         assert parameters.min_cluster_size > 0, 'The "min_cluster_size" should be a positive integer.'

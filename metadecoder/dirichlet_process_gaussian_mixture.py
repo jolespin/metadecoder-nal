@@ -36,15 +36,15 @@ class DPGMM:
 
 
     def initialize_r(self):
-        self.r = numpy.zeros(shape = (self.samples, self.components), dtype = float)
+        self.r = numpy.zeros(shape = (self.samples, self.components), dtype = numpy.float64)
         kmeans = KMeans(n_clusters = min(self.components, self.samples), n_init = 2, random_state = self.random_number)
-        kmeans_labels = kmeans.fit_predict((self.x - self.gaussian_prior_mu) / (numpy.sqrt(numpy.diag(self.wishart_prior_psi)) + numpy.finfo(float).eps))
+        kmeans_labels = kmeans.fit_predict((self.x - self.gaussian_prior_mu) / (numpy.sqrt(numpy.diag(self.wishart_prior_psi)) + numpy.finfo(numpy.float64).eps))
         for label in range(self.components):
             self.r[kmeans_labels == label, label] = 1.0
 
 
     def update_beta_gamma(self):
-        self.beta_gamma = numpy.empty(shape = (self.components, 2), dtype = float)
+        self.beta_gamma = numpy.empty(shape = (self.components, 2), dtype = numpy.float64)
         self.beta_gamma[ : , 0] = 1. + self.component_weight
         self.beta_gamma[ : , 1] = self.beta_prior_alpha + numpy.hstack((numpy.cumsum(self.component_weight[ : 0 : -1])[ : : -1], 0))
 
@@ -62,7 +62,7 @@ class DPGMM:
 
 
     def update_wishart_psi(self):
-        self.wishart_psi = numpy.empty(shape = (self.components, self.features, self.features), dtype = float)
+        self.wishart_psi = numpy.empty(shape = (self.components, self.features, self.features), dtype = numpy.float64)
         for component in range(self.components):
             component_mu_minus_gaussian_prior_mu = self.component_mu[component] - self.gaussian_prior_mu
             self.wishart_psi[component] = (
@@ -107,12 +107,12 @@ class DPGMM:
         components = numpy.sum(self.component_weight < self.min_component_weight)
         components = numpy.argsort(self.component_weight)[min(ceil(components * 0.9), self.components - 1) : ]
         self.r = self.r[ : , numpy.sort(components)]
-        self.r /= (numpy.sum(self.r, axis = 1, keepdims = True) + numpy.finfo(float).eps)
+        self.r /= (numpy.sum(self.r, axis = 1, keepdims = True) + numpy.finfo(numpy.float64).eps)
         self.components = components.shape[0]
 
 
     def update_component_weight(self):
-        self.component_weight = self.x_weight @ self.r + numpy.finfo(float).eps
+        self.component_weight = self.x_weight @ self.r + numpy.finfo(numpy.float64).eps
 
 
     def update_component_mu(self):
@@ -120,7 +120,7 @@ class DPGMM:
 
 
     def update_component_sigma(self):
-        self.component_sigma = numpy.empty(shape = (self.components, self.features, self.features), dtype = float)
+        self.component_sigma = numpy.empty(shape = (self.components, self.features, self.features), dtype = numpy.float64)
         for component in range(self.components):
             x_minus_component_mu = self.x - self.component_mu[component] # (self.samples, self.features) #
             self.component_sigma[component] = (self.r[:, component] * self.x_weight * x_minus_component_mu.T) @ x_minus_component_mu / self.component_weight[component]

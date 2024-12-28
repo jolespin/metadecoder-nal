@@ -1,3 +1,4 @@
+import os
 from ctypes import c_int64
 from datetime import datetime
 from math import ceil
@@ -82,7 +83,9 @@ def freeProcesses(queue, processes):
 
 
 def main(parameters):
-
+    output_directory = os.path.dirname(parameters.output)
+    os.makedirs(output_directory, exist_ok = True)
+    
     print(f'{datetime.now().strftime("%Y-%m-%d %H:%M:%S")} -> Indexing all bam files.', flush = True)
     indexBam(parameters.bam, parameters.threads)
 

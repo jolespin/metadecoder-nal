@@ -19,11 +19,11 @@ class GMM:
         '''
         self.__x: samples * features
         '''
-        self.__x = numpy.array([numpy.mean(X, axis = 0) for X in self.__X], dtype = float)
+        self.__x = numpy.array([numpy.mean(X, axis = 0) for X in self.__X], dtype = numpy.float64)
 
 
     def __initialize_log_gaussian_density(self):
-        self.__log_gaussian_density = numpy.empty(shape = (self.__samples, self.__components), dtype = float)
+        self.__log_gaussian_density = numpy.empty(shape = (self.__samples, self.__components), dtype = numpy.float64)
 
 
     def __construct_mapping(self):
@@ -45,7 +45,7 @@ class GMM:
 
 
     def __update_sigma(self):
-        self.__sigma = numpy.empty(shape = (self.__components, self.__features, self.__features), dtype = float)
+        self.__sigma = numpy.empty(shape = (self.__components, self.__features, self.__features), dtype = numpy.float64)
         weight = self.__responsibility[self.__mapping]
         for component in range(self.__components):
             temp = self.__X - self.__mu[component]
@@ -78,7 +78,7 @@ class GMM:
         self.log_responsibility -= logsumexp(self.log_responsibility, axis = 1, keepdims = True)
         # posterior
         self.__responsibility = numpy.exp(self.log_responsibility)
-        self.__responsibility += numpy.finfo(float).eps
+        self.__responsibility += numpy.finfo(numpy.float64).eps
         self.__responsibility /= numpy.sum(self.__responsibility, axis = 1, keepdims = True)
 
 

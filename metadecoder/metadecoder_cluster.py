@@ -36,7 +36,7 @@ def read_coverage_file(files, sequence_id2sequence, sequences):
         open_file.close()
 
     bin_coverage = list()
-    coverage = numpy.empty(shape = (sequences, coverages), dtype = float)
+    coverage = numpy.empty(shape = (sequences, coverages), dtype = numpy.float64)
     for sequence in range(sequences):
         if sequence in sequence2bin2coverage:
             bin2coverage = sequence2bin2coverage[sequence]
@@ -45,7 +45,7 @@ def read_coverage_file(files, sequence_id2sequence, sequences):
             bin_coverage_ = [[1e-5 for coverage_ in range(coverages)]]
         if len(bin_coverage_) > 1:
             del bin_coverage_[-1]
-        bin_coverage.append(numpy.array(bin_coverage_, dtype = float))
+        bin_coverage.append(numpy.array(bin_coverage_, dtype = numpy.float64))
         coverage[sequence] = numpy.mean(bin_coverage[sequence], axis = 0)
     return (coverage, bin_coverage)
 
@@ -162,7 +162,7 @@ def load_kmer_frequency(file):
     for line in open_file:
         kmer_frequency.append(line.rstrip('\n').split('\t'))
     open_file.close()
-    return numpy.array(kmer_frequency, dtype = float)
+    return numpy.array(kmer_frequency, dtype = numpy.float64)
 
 
 def dump_dpgmm_prediction(file, predictions):
@@ -239,7 +239,7 @@ def run_models(process_queue, container, offset, kmer, kmer2index, kmers, sampli
                 gmm = GaussianMixture(n_components = clusters, covariance_type = 'full', n_init = 1, init_params = 'kmeans', random_state = random_number)
                 x = numpy.concatenate((kmer_frequency, coverage), axis = 1)
                 gmm.fit(x)
-                clustering_probability = numpy.log(gmm.predict_proba(x) + numpy.finfo(float).eps)
+                clustering_probability = numpy.log(gmm.predict_proba(x) + numpy.finfo(numpy.float64).eps)
 
             clustered_sequences_list, unclustered_sequences = cluster_sequences(sequences, clustering_probability, min_clustering_probability)
             if len(clustered_sequences_list) > 1:
@@ -281,6 +281,10 @@ def main(parameters):
         except Exception:
             from .dirichlet_process_gaussian_mixture import DPGMM
 
+    # Create output directory
+    output_directory = os.path.dirname(parameters.output)
+    os.makedirs(output_directory, exist_ok = True)
+    
     # read fasta file, return list, list #
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Loading fasta file.', flush = True)
     sequence_ids = list()
@@ -299,7 +303,7 @@ def main(parameters):
     length = numpy.array(length)
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Done.', flush = True)
 
-    sequences = numpy.arange(len(sequence_ids), dtype = int)
+    sequences = numpy.arange(len(sequence_ids), dtype = numpy.int64)
 
     # Read coverage file, return array. #
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Loading coverage file.', flush = True)
@@ -392,7 +396,7 @@ def main(parameters):
 
     print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', 'Running the kmer frequency and coverage models for clustering.', flush = True)
     while True:
-        container_array = numpy.asarray(container, dtype = int)
+        container_array = numpy.asarray(container, dtype = numpy.int64)
         print(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '->', '{0:.2%} of the total sequences have been processed.'.format(numpy.sum(container_array < 0) / total_sequences), flush = True)
         if numpy.any(container_array >= 0):
             for container_value in numpy.unique(container_array[container_array >= 0]):
@@ -431,7 +435,7 @@ def main(parameters):
     output_clusters(
         sequence_ids,
         SEQUENCES,
-        numpy.asarray(container, dtype = int),
+        numpy.asarray(container, dtype = numpy.int64),
         parameters.output,
         parameters.no_clusters,
         parameters.output_unclustered_sequences
